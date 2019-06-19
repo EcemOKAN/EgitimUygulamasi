@@ -1,0 +1,92 @@
+﻿@model  IEnumerable<egitimUygulamasi.Areas.admin.Models.KonuIcerik>
+
+@{
+    ViewBag.Title = "Konu İçerik Yönetimi";
+    Layout = "~/Areas/admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Konu İçerik Düzenle <small>Konu İçeriğinin Düzenlenmesi</small></h2>
+            <ul class="nav navbar-right">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+
+            </ul>
+
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <button type="button" class="btn btn-success btn-lg" onclick="location.href='@Url.RouteUrl("AddTopicContent")'">Yeni Konu İçeriği</button>
+        </div>
+
+        <div class="x_content">
+
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th width="70%">Konu İçerik</th>
+                        <th>Konu</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="tr_@item.ID">
+                            <td> </td>
+                            <td>
+                                @item.Icerik
+                            </td>
+                            <td>
+                                @item.Konu.KonuAdi
+                            </td>
+                            <td>
+                                @Html.RouteLink("Düzenle", "EditTopicContent", new { id = item.ID })
+                            </td>
+                            <td>
+                                <a href="#" onclick="DeleteTopicContent(@item.ID)">Sil</a>
+                            </td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function DeleteTopicContent(id) {
+        if (confirm("Konu Silinsin mi ?")) {
+            $.ajax({
+                type: "POST",
+                url: "konuicerikSil",
+                data: { ID: id },
+                success: function (data) {
+                    var result = JSON.parse(data);
+                    if (result.durum == "OK") {
+                        $("#tr_" + id).remove();
+                        $("#message").append("<div class='alert alert-info'><strong></strong>" + result.mesaj + " </div>")
+                    }
+                    else if (result.durum = "NO") {
+                        $("#message").append("<div class='alert alert-info'><strong></strong>" + result.mesaj + " </div>")
+                    }
+                }
+            });
+        }
+    }
+</script>
+
+
+
+

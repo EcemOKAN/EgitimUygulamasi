@@ -1,0 +1,121 @@
+﻿@model egitimUygulamasi.Areas.admin.Models.ViewModels.SoruCevapViewModels
+
+@{
+    ViewBag.Title = "Test Ekle";
+    Layout = "~/Areas/admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Test Ekle <small>Test İçeriğinin Eklenmesi</small></h2>
+
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <button type="button" class="btn btn-success btn-lg" onclick="location.href='@Url.RouteUrl("Questions")'">Test Listesi</button>
+        </div>
+
+        <div class="clearfix"></div>
+        @Html.Raw(@ViewBag.Message)
+        @using (Html.BeginForm("Add", "Question", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+        <div class="x_content">
+            <br />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="konuAdi">
+                    Konu Adı <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="Konu" name="Konu" class="form-control">
+                        @foreach (var item in ViewBag.Question)
+                        {
+                            <option value="@item.ID">@item.KonuAdi</option>
+                        }
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <br />
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="icerik">
+                    Soru <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" name="Soru" class="form-control" />
+                </div>
+            </div>
+
+
+            <div class="clearfix"></div>
+            <br />
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="icerik">
+                    Soru Tipi <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="radio" class="tip" name="tip" value="0" /> Test <br />
+                    <input type="radio" class="tip" name="tip" value="1" /> Doğru Yanlış <br />
+                    <input type="radio" class="tip" name="tip" value="2" /> Boşluk Doldurma
+                    <input type="hidden" name="SoruTip" id="SoruTip" />
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <br />
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="icerik">
+                    Cevap <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12 cevaplar">
+                    <input type="text" class="form-control" /> <br />
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+
+
+            <br />
+            <br />
+            <div class="ln_solid"></div>
+            <div class="form-group">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+                    <button class="btn btn-primary" type="reset">Temizle</button>
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+@* To do : globale alınacak... *@
+<script src="/Areas/admin/Content/vendors/jquery/dist/jquery.min.js"></script>
+<script>
+
+    $('input[type=radio][name=tip]').change(function () {
+        $(".cevaplar").empty();
+        switch (this.value) {
+            case "0":
+                $("#SoruTip").val("Test");
+                $(".cevaplar").append("<input type='text' name='cevaplar' class='form-control' /> <br /><input type='text' name='cevaplar' class='form-control' /> <br /><input type='text' name='cevaplar' class='form-control' /> <br /><input type='text' name='cevaplar' class='form-control' /> <br />").slideDown("slow");;
+                break;
+            case "1":
+                $("#SoruTip").val("Doğru-Yanlış");
+                $(".cevaplar").append("<input type='text' class='form-control' name='cevaplar' /> <br /><input type='text' name='cevaplar' class='form-control' /> <br />");
+                break;
+            case "2":
+                $("#SoruTip").val("Boşluk Doldurma");
+                $(".cevaplar").append("<input type='text' name='cevaplar' class='form-control' /> <br />");
+                break;
+        }
+    });
+
+
+</script>

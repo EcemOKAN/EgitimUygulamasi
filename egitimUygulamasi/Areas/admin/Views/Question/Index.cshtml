@@ -1,0 +1,110 @@
+﻿@model  IEnumerable<egitimUygulamasi.Areas.admin.Models.Soru>
+
+@{
+    ViewBag.Title = "Soru Cevap Yönetimi";
+    Layout = "~/Areas/admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Soru Cevap Düzenle <small>Soru-Cevap İçeriğinin Düzenlenmesi</small></h2>
+            <ul class="nav navbar-right">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+
+            </ul>
+
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <button type="button" class="btn btn-success btn-lg" onclick="location.href='@Url.RouteUrl("AddQuestion")'">Yeni Soru-Cevap</button>
+        </div>
+
+        <br />
+
+        <div class="x_content">
+            <div class="form-group">
+
+                <br />
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="konuAdi">
+                    Konu Adı <span class="required"></span>
+                </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="DersID" name="DersID" class="form-control">
+                        @foreach (var item in ViewBag.Question)
+                        {
+                            <option value="@item.ID">@item.KonuAdi</option>
+                        }
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="x_content">
+
+                <br />
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Soru</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="tr_@item.ID">
+                                <td> </td>
+                                <td>
+                                    @item.Sorular
+                                </td>
+
+                                <td>
+                                    @Html.RouteLink("Düzenle", "EditQuestion", new { id = item.ID })
+                                </td>
+                                <td>
+                                    <a href="#" onclick="DeleteQuestion(@item.ID)">Sil</a>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function DeleteTopicContent(id) {
+        if (confirm("Konu Silinsin mi ?")) {
+            $.ajax({
+                type: "POST",
+                url: "konuicerikSil",
+                data: { ID: id },
+                success: function (data) {
+                    var result = JSON.parse(data);
+                    if (result.durum == "OK") {
+                        $("#tr_" + id).remove();
+                        $("#message").append("<div class='alert alert-info'><strong></strong>" + result.mesaj + " </div>")
+                    }
+                    else if (result.durum = "NO") {
+                        $("#message").append("<div class='alert alert-info'><strong></strong>" + result.mesaj + " </div>")
+                    }
+                }
+            });
+        }
+    }
+</script>
+
+
+
+
